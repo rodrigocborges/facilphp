@@ -109,4 +109,45 @@ class Request {
 
         return Security::verifyCsrf($token);
     }
+
+    /**
+     * Retrieves uploaded files from $_FILES.
+     * Returns a specific file array if $key is provided, or all files if null.
+     *
+     * @param string|null $key
+     * @return array|null
+     */
+    public static function file(?string $key = null): ?array {
+        if ($key === null) {
+            return $_FILES;
+        }
+        return $_FILES[$key] ?? null;
+    }
+
+    /**
+     * Gets the current HTTP request method (GET, POST, PUT, DELETE, etc.).
+     *
+     * @return string
+     */
+    public static function method(): string {
+        return strtoupper($_SERVER['REQUEST_METHOD'] ?? 'GET');
+    }
+
+    /**
+     * Retrieves the client's IP address, accounting for load balancers and proxies (like Cloudflare).
+     *
+     * @return string
+     */
+    public static function ip(): string {
+        $keys = ['HTTP_CLIENT_IP', 'HTTP_X_FORWARDED_FOR', 'HTTP_X_FORWARDED', 'HTTP_X_CLUSTER_CLIENT_IP', 'HTTP_FORWARDED_FOR', 'HTTP_FORWARDED', 'REMOTE_ADDR'];
+        
+        foreach ($keys as $key) {
+            if (array_key_exists($key, $_SERVER) && !empty($_SERVER[$key])) {
+                // If multiple IPs are passed, the first one is usually the real client IP
+                $ips = explode(',', $_SERVER[$key]);
+                return trim($ips[0]);
+            }
+        }
+        return '127.0.0.1';
+    }
 }
