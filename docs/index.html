@@ -236,6 +236,7 @@
                 <li><a href="#environment">Environment (.env)</a></li>
                 <li><a href="#routing">File-Based Routing</a></li>
                 <li><a href="#request-response">Request & Response</a></li>
+                <li><a href="#file-uploads">File Uploads</a></li>
                 <li><a href="#validation">Validation Rules</a></li>
                 <li><a href="#database">Database (Raw PDO)</a></li>
                 <li><a href="#query-builder">MicroORM (Query Builder)</a></li>
@@ -344,6 +345,47 @@ return [
         );
     }
 ];</code></pre>
+        </section>
+
+        <section id="file-uploads">
+            <h2>File Uploads</h2>
+            <p>Handling <code>$_FILES</code> securely can be tedious. Facil provides a fluent DX for retrieving and storing uploaded files, automatically generating secure, unique filenames and preventing directory traversal.</p>
+            
+            <h3>Retrieving & Saving Files</h3>
+            <p>Use <code>Request::file()</code> to grab the file payload and <code>Upload::save()</code> to store it. By default, it validates the extension/size and saves to your project's <code>public/uploads</code> directory.</p>
+            <pre><code class="language-php">use Facil\Http\Request;
+use Facil\Http\Response;
+use Facil\Filesystem\Upload;
+
+return [
+    'POST' => function() {
+        // 1. Grab the file from the request
+        $file = Request::file('avatar');
+
+        // 2. Save it securely (Returns the new unique filename, or false on error)
+        $filename = Upload::save($file);
+
+        if (!$filename) {
+            return Response::json(['error' => 'Upload failed or invalid file.'], 400);
+        }
+
+        return Response::json([
+            'message' => 'File uploaded successfully!',
+            'url' => '/uploads/' . $filename
+        ]);
+    }
+];</code></pre>
+
+            <h3>Customizing Destination & Deleting</h3>
+            <p>You can easily override the default destination, allowed extensions, and maximum file size (default is 2MB). You can also delete files just as easily.</p>
+            <pre><code class="language-php">use Facil\Filesystem\Upload;
+
+// Custom destination, only PDF/DOCX, max 5MB
+$customPath = dirname(__DIR__, 2) . '/private/documents';
+$filename = Upload::save($file, $customPath, ['pdf', 'docx'], 5242880);
+
+// Delete an existing file
+Upload::delete($customPath . '/' . $filename);</code></pre>
         </section>
 
         <section id="validation">
