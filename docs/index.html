@@ -382,7 +382,7 @@ return [
 
 // Custom destination, only PDF/DOCX, max 5MB
 $customPath = dirname(__DIR__, 2) . '/private/documents';
-$filename = Upload::save($file, $customPath, ['pdf', 'docx'], 5242880);
+$filename = Upload::save($file, $customPath, ['pdf', 'docx'], Upload::mb(5)); //or 5mb = 5242880 bytes
 
 // Delete an existing file
 Upload::delete($customPath . '/' . $filename);</code></pre>

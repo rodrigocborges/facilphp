@@ -64,4 +64,15 @@ class Upload {
         }
         return false;
     }
+
+    /**
+     * Converts Megabytes to Bytes.
+     * Extremely useful for setting the $maxSize parameter cleanly.
+     *
+     * @param float $megabytes
+     * @return int
+     */
+    public static function mb(float $megabytes): int {
+        return (int) ($megabytes * 1024 * 1024);
+    }
 }
