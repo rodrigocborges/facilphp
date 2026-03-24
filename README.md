@@ -81,7 +81,7 @@ return [
 
 `Facil` comes with a beautiful, fully responsive single-page documentation. 
 
-Simply open the `documentation.html` (or wherever you placed your documentation file) in your browser to read the complete guide, featuring Dark/Light mode and detailed examples of every class in the framework.
+Simply open the `docs/index.html` (or wherever you placed your documentation file) in your browser to read the complete guide, featuring Dark/Light mode and detailed examples of every class in the framework.
 
 ## 🤝 Contributing
 
